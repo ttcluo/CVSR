@@ -25,7 +25,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: experiments/CVSR_Vimeo90K_BIx4_ex_real_img/models/net_g_300000.pth
+  pretrain_network_g: experiments/models/CVSR_ex_real_img_Vimeo_b6_30k.pth
   strict_load_g: true
 
 # validation settings
