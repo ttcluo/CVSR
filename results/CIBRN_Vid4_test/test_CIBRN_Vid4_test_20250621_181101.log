@@ -1,0 +1,1290 @@
+2025-06-21 18:11:01,581 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.4.2
+	PyTorch: 2.1.0+cu121
+	TorchVision: 0.16.0+cu121
+2025-06-21 18:11:01,582 INFO: 
+  name: CIBRN_Vid4_test
+  model_type: VideoRecurrentModel
+  scale: 4
+  num_gpu: 1
+  manual_seed: 0
+  datasets:[
+    test:[
+      name: Vid4
+      type: VideoRecurrentTestDataset
+      dataroot_gt: ../vsr_dataset/Vid4/GT
+      dataroot_lq: ../vsr_dataset/Vid4/BIx4
+      io_backend:[
+        type: disk
+      ]
+      cache_data: True
+      num_frame: -1
+      phase: test
+      scale: 4
+    ]
+  ]
+  network_g:[
+    type: CIBRNNet
+    num_feat: 64
+    extract_block: 12
+    num_block: 30
+    resType: ResidualBlock_CA
+    use_deblur: True
+  ]
+  path:[
+    pretrain_network_g: experiments/CIBRN_Vimeo90k_b6/models/net_g_100000.pth
+    strict_load_g: True
+    results_root: /data/luochuan/BasicSR/results/CIBRN_Vid4_test
+    log: /data/luochuan/BasicSR/results/CIBRN_Vid4_test
+    visualization: /data/luochuan/BasicSR/results/CIBRN_Vid4_test/visualization
+  ]
+  val:[
+    save_img: True
+    suffix: None
+    metrics:[
+      psnr:[
+        type: calculate_psnr
+        crop_border: 0
+        test_y_channel: True
+      ]
+      ssim:[
+        type: calculate_ssim
+        crop_border: 0
+        test_y_channel: True
+      ]
+    ]
+  ]
+  dist: True
+  rank: 0
+  world_size: 1
+  auto_resume: False
+  is_train: False
+
+2025-06-21 18:11:01,582 INFO: Generate data info for VideoTestDataset - Vid4
+2025-06-21 18:11:01,582 INFO: Cache calendar for VideoTestDataset...
+2025-06-21 18:11:03,364 INFO: Cache city for VideoTestDataset...
+2025-06-21 18:11:04,832 INFO: Cache foliage for VideoTestDataset...
+2025-06-21 18:11:06,852 INFO: Cache walk for VideoTestDataset...
+2025-06-21 18:11:08,771 INFO: Dataset [VideoRecurrentTestDataset] - Vid4 is built.
+2025-06-21 18:11:08,771 INFO: Number of test images in Vid4: 4
+2025-06-21 18:11:11,196 INFO: Network [CIBRNNet] is created.
+2025-06-21 18:11:11,774 INFO: Network: DistributedDataParallel - CIBRNNet, with parameters: 8,100,180
+2025-06-21 18:11:11,774 INFO: CIBRNNet(
+  (offset): ConvResBlock(
+    (conv_resblock): Sequential(
+      (0): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Sequential(
+        (0): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (1): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (2): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+      )
+    )
+  )
+  (offset_weight): Sequential(
+    (0): Conv2d(192, 64, kernel_size=(1, 1), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1))
+    (3): ReLU(inplace=True)
+    (4): Conv2d(64, 192, kernel_size=(1, 1), stride=(1, 1))
+  )
+  (for_dcn): DCNv2Pack(
+    (conv_offset): Conv2d(64, 432, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  )
+  (bac_dcn): DCNv2Pack(
+    (conv_offset): Conv2d(64, 432, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  )
+  (dfe): ConvResBlock(
+    (conv_resblock): Sequential(
+      (0): Sequential(
+        (0): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (1): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (2): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+      )
+    )
+  )
+  (feat_extract): ConvResBlock(
+    (conv_resblock): Sequential(
+      (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Sequential(
+        (0): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (1): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (2): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (3): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (4): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (5): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (6): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (7): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (8): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (9): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (10): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (11): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+      )
+    )
+  )
+  (forward_resblocks): ConvResBlock(
+    (conv_resblock): Sequential(
+      (0): Conv2d(256, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Sequential(
+        (0): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (1): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (2): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (3): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (4): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (5): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (6): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (7): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (8): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (9): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (10): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (11): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (12): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (13): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (14): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (15): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (16): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (17): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (18): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (19): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (20): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (21): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (22): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (23): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (24): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (25): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (26): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (27): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (28): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (29): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+      )
+    )
+  )
+  (backward_resblocks): ConvResBlock(
+    (conv_resblock): Sequential(
+      (0): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Sequential(
+        (0): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (1): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (2): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (3): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (4): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (5): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (6): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (7): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (8): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (9): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (10): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (11): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (12): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (13): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (14): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (15): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (16): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (17): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (18): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (19): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (20): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (21): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (22): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (23): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (24): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (25): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (26): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (27): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (28): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+        (29): ResidualBlockNoBN(
+          (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (relu): ReLU(inplace=True)
+          (attn): CALayer(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (conv_du): Sequential(
+              (0): Conv2d(64, 8, kernel_size=(1, 1), stride=(1, 1))
+              (1): ReLU(inplace=True)
+              (2): Conv2d(8, 64, kernel_size=(1, 1), stride=(1, 1))
+              (3): Sigmoid()
+            )
+          )
+        )
+      )
+    )
+  )
+  (compress): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1))
+  (resblock1): ResidualBlockNoBN(
+    (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (relu): ReLU(inplace=True)
+  )
+  (conv3D): Sequential(
+    (0): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+    (1): PReLU(num_parameters=1)
+    (2): Conv3d(64, 64, kernel_size=(2, 1, 1), stride=(2, 1, 1))
+    (3): AdaptiveAvgPool3d(output_size=1)
+  )
+  (convreal): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (convimg): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (concate): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1))
+  (up1): PSUpsample(
+    (up_conv): Conv2d(64, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  )
+  (up2): PSUpsample(
+    (up_conv): Conv2d(64, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  )
+  (conv_hr): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_last): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (img_up): Upsample(scale_factor=4.0, mode='bilinear')
+  (lrelu): LeakyReLU(negative_slope=0.1, inplace=True)
+  (deblur): DeblurModule(
+    (stride_conv_l2): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+    (stride_conv_l3): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+    (resblock_l3): ResidualBlockNoBN(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (relu): ReLU(inplace=True)
+    )
+    (resblock_l2_1): ResidualBlockNoBN(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (relu): ReLU(inplace=True)
+    )
+    (resblock_l2_2): ResidualBlockNoBN(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (relu): ReLU(inplace=True)
+    )
+    (resblock_l1): ModuleList(
+      (0-4): 5 x ResidualBlockNoBN(
+        (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (relu): ReLU(inplace=True)
+      )
+    )
+    (upsample): Upsample(scale_factor=2.0, mode='bilinear')
+    (lrelu): LeakyReLU(negative_slope=0.1, inplace=True)
+  )
+)
+2025-06-21 18:11:11,829 INFO: Loading CIBRNNet model from experiments/CIBRN_Vimeo90k_b6/models/net_g_100000.pth, with param key: [params].
+2025-06-21 18:11:14,482 INFO: Model [VideoRecurrentModel] is created.
+2025-06-21 18:11:14,482 INFO: Testing Vid4...
+2025-06-21 18:11:51,142 INFO: Validation Vid4
+	 # psnr: 27.7014	 # calendar: 24.3995	 # city: 27.9908	 # foliage: 26.8751	 # walk: 31.5400
+	    Best: 27.7014 @ CIBRN_Vid4_test iter
+	 # ssim: 0.8376	 # calendar: 0.8248	 # city: 0.8166	 # foliage: 0.7864	 # walk: 0.9224
+	    Best: 0.8376 @ CIBRN_Vid4_test iter
+
