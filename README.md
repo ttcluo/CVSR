@@ -12,7 +12,7 @@ Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)*
 
 ## Framework of CVSR
 
-<img src = "./asset/framework.png" width="100%" height="100%"/>
+<img src = "./framework.png" width="100%" height="100%"/>
 
 ## Usage
 ### Data Preparation
