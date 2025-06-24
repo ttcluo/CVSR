@@ -52,7 +52,7 @@ comming soon
 comming soon
 
 ### Pretrained Model
-[Pretrained Model](https://github.com/ttcluo/CVSR/experiments/models)
+[Pretrained Model](experiments/models)
 
 ## Acknowledgement
 
