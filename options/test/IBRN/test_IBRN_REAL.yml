@@ -1,0 +1,57 @@
+# general settings
+name: test_IBRN_REAL_train_REAL_val_REAL
+experiments_root: exp_video_real
+model_type: BasicVSRModel  # BasicVSRModel BasicVSRGanModel
+scale: 1
+num_gpu: 1 # set num_gpu: 0 for cpu mode
+manual_seed: 10
+
+# dataset and data loader settings
+datasets:
+  test:
+    name: REAL
+    type: REALRecurrentDataset
+    dataroot_gt: ../vsr_dataset/RealVSR/GT_YCbCr_test
+    dataroot_lq: ../vsr_dataset/RealVSR/LQ_YCbCr_test
+    meta_info_file: ../vsr_dataset/RealVSR/meta_info_REAL_test_GT.txt
+    io_backend:
+      type: disk
+
+    is_train: false
+    num_frame: 5
+    gt_size: ~
+    interval_list: [1]
+    random_reverse: false
+    use_flip: false
+    use_rot: false
+
+# network structures
+network_g:
+  type: BasicVSR_V4 # BasicVSR BasicVSR_V2 BasicVSR_FNO BasicVSR_DCN
+  num_feat: 64
+  extract_block: 12
+  num_block: 30
+  resType: ResidualBlock_CA # ResidualBlockNoBN LF_Block RK2_Block SecondOrderRK2_Block ResidualFConv ResidualBlock_CA
+  use_deblur: false
+  upscale: 1
+
+# path
+path:
+  pretrain_network_g: experiments/IBRN_2e-4_REAL_BI_x4/models/net_g_100000.pth
+  strict_load_g: true
+
+
+# validation settings
+val:
+  val_freq: !!float 5e3
+  save_img: false
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+    ssim: # metric name, can be arbitrary
+      type: calculate_ssim
+      crop_border: 0
+      test_y_channel: false

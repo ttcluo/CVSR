@@ -1,0 +1,19 @@
+addict==2.4.0
+future==1.0.0
+lmdb==1.6.2
+numpy>=1.17
+opencv-python-headless==4.11.0.86
+Pillow==10.4.0
+pyyaml==6.0.2
+requests==2.32.3
+scikit-image==0.21.0
+scipy==1.10.1
+tb-nightly==2.14.0a20230808
+# torch==2.1.0+cu121
+# torchaudio==2.1.0+cu121
+# torchvision==0.16.0+cu121
+tqdm==4.67.1
+yapf==0.43.0
+thop
+six==1.17.0
+h5py

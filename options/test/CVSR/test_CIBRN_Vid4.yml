@@ -1,0 +1,48 @@
+name: CIBRN_Vid4_test
+model_type: VideoRecurrentModel
+scale: 4
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test:  # the 1st test dataset
+    name: Vid4
+    type: VideoRecurrentTestDataset
+    dataroot_gt: ../vsr_dataset/Vid4/GT
+    dataroot_lq: ../vsr_dataset/Vid4/BIx4
+    io_backend:
+      type: disk
+    cache_data: True
+    num_frame: -1
+
+
+# network structures
+network_g:
+  type: CIBRNNet
+  num_feat: 64
+  extract_block: 12
+  num_block: 30
+  resType: ResidualBlock_CA
+  use_deblur: true
+
+# path
+path:
+  pretrain_network_g: experiments/CIBRN_Vimeo90k_b6/models/net_g_100000.pth
+  strict_load_g: true
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: true
+    ssim:
+      type: calculate_ssim
+      crop_border: 0
+      test_y_channel: true
+
+  input_shape: [1, 5, 3, 144, 180] # [batch_size, num_frames, channels, height, width] For FLOPs

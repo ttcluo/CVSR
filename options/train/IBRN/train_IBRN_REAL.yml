@@ -1,0 +1,125 @@
+# general settings
+name: IBRN_2e-4_REAL_BI_x4
+experiments_root: exp_video_real
+model_type: BasicVSRModel  # BasicVSRModel BasicVSRGanModel
+scale: 1
+num_gpu: 1 # set num_gpu: 0 for cpu mode
+manual_seed: 10
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: REAL
+    type: REALRecurrentDataset
+    dataroot_gt: ../vsr_dataset/RealVSR/GT_YCbCr
+    dataroot_lq: ../vsr_dataset/RealVSR/LQ_YCbCr
+    meta_info_file: ../vsr_dataset/RealVSR/meta_info_REAL_GT.txt
+    io_backend:
+      type: disk
+
+    is_train: true
+    num_frame: 5
+    gt_size: 64
+    interval_list: [1]
+    random_reverse: false
+    use_flip: true
+    use_rot: true
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 6
+    batch_size_per_gpu: 1
+    dataset_enlarge_ratio: 200
+    prefetch_mode: ~
+    pin_memory: true
+
+  val:
+    name: REAL
+    type: REALRecurrentDataset
+    dataroot_gt: ../vsr_dataset/RealVSR/GT_YCbCr_test
+    dataroot_lq: ../vsr_dataset/RealVSR/LQ_YCbCr_test
+    meta_info_file: ../vsr_dataset/RealVSR/meta_info_REAL_test_GT.txt
+    io_backend:
+      type: disk
+
+    is_train: false
+    num_frame: 5
+    gt_size: ~
+    interval_list: [1]
+    random_reverse: false
+    use_flip: false
+    use_rot: false
+
+# network structures
+network_g:
+  type: BasicVSR_V4 # BasicVSR BasicVSR_V2 BasicVSR_FNO BasicVSR_DCN
+  num_feat: 64
+  extract_block: 12
+  num_block: 30
+  resType: ResidualBlock_CA # ResidualBlockNoBN LF_Block RK2_Block SecondOrderRK2_Block ResidualFConv ResidualBlock_CA
+  use_deblur: false
+  upscale: 1
+
+# path
+path:
+  pretrain_network_g: #experiments/IBRN_2e-4_REAL_BI_x4/models/net_g_95000.pth
+  strict_load_g: false
+  resume_state: experiments/IBRN_2e-4_REAL_BI_x4/training_states/200000.state
+
+# training settings
+train:
+  optim_g:
+    type: Adam
+    lr: !!float 4e-6
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: CosineAnnealingRestartLR
+    periods: [600000]
+    restart_weights: [1]
+    eta_min: !!float 4e-7
+
+  total_iter: 600000 # 600000
+  warmup_iter: -1  # no warm up
+  # fix_iter: 5000
+  # spynet_lr_mul: 0.125
+
+  # losses
+  pixel_opt:
+    type: CharbonnierLoss
+    loss_weight: 1.0
+    reduction: mean
+
+  # fl_opt:
+  #   type: FrequencyLoss
+  #   loss_weight: 0.0001
+
+  # use_hidden_closs: True
+
+# validation settings
+val:
+  val_freq: !!float 5e3
+  save_img: false
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 5e3
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
+
+find_unused_parameters: true

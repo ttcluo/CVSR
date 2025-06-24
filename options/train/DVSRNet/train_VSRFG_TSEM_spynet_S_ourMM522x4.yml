@@ -1,0 +1,127 @@
+# general settings
+name: ICMEVSRx4_FG_SPM_spynet_loss_imgwarpourMM522
+model_type: VideoRecurrentModel
+scale: 4
+num_gpu: 4  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  train:
+    # name: Vimeo90K
+    # type: Vimeo90KRecurrentDataset
+    # dataroot_gt: datasets/vimeo90k/vimeo_septuplet/sequences
+    # dataroot_lq: datasets/vimeo90k/BIx4
+    # meta_info_file: basicsr/data/meta_info/meta_info_Vimeo90K_train_GT.txt
+    name: MM522
+    type: MM522RecurrentDataset  # MM522Dataset  # MM522RecurrentDataset
+    dataroot_gt: ../vsr_dataset/MMCN/data/train
+    dataroot_lq:  ../vsr_dataset/MMCN/data/train
+    meta_info_file:  ../vsr_dataset/MMCN/filelist_train.txt
+    val_partition: eval  # set to 'official' when use the official validation partition
+    test_mode: False
+    io_backend:
+      type: disk
+
+    num_frame: 7
+    gt_size: 256
+    interval_list: [1]
+    random_reverse: false
+    use_flip: true
+    use_rot: true
+    flip_sequence: true
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 6
+    batch_size_per_gpu: 1
+    dataset_enlarge_ratio: 100
+    prefetch_mode: ~
+
+  val:
+    name: Vid4
+    type: VideoRecurrentTestDataset  # VideoRecurrentTestDataset
+    dataroot_gt: ../vsr_dataset/Vid4/GT
+    dataroot_lq: ../vsr_dataset/Vid4/BIx4
+    # dataroot_gt: /share22/home/zhuqiang/zhuqiang/BasicSR0906/tests/vid4/GT-1  #Vimeo90K/vid4/GT     #vid4GT  vid4GT-1   #  Vimeo90K/vid4/GT
+    # dataroot_lq: /share22/home/zhuqiang/zhuqiang/BasicSR0906/tests/vid4/GTx2-1  #  vid4-1
+
+    cache_data: True
+    io_backend:
+      type: disk
+
+    num_frame: -1  # not needed
+
+# network structures
+network_g:
+  type: ICMEVSRx4_FG_SPM_Spynet_S_img_warp_our  # IconVSRx2_FS_fg_01  # IconVSRx2_FS IconVSRx2_FG_FB_SPM
+  num_feat: 64
+  num_block: 10 # 10  # 30
+  keyframe_stride: 5
+  temporal_padding:  3  # 3
+  spynet_path:  experiments/pretrained_models/flownet/spynet/spynet_L-chairs_later.pth  # spynet_sintel_final-3d2a1287.pth  # spynet_20210409-c6c1bd09.pth  #  raft-sintel.pth  #  #
+  # spynet_path: /share22/home/zhuqiang/zhuqiang/BasicSR0906/experiments/pretrained_models/flownet/org_35000_raft-sintel.pth  # org_30000_raft-sintel.pth  # raft-sintel_org.pth # org_30000_raft-sintel.pth # raft-sintel_49000_1021_22-20.pth  # 25000_0718_19-46_raft-chairs.pth
+  # edvr_path: /share22/home/zhuqiang/zhuqiang/BasicSR0906/experiments/pretrained_models/BasicVSR/EDVR_Vimeo90K_pretrained_for_IconVSR-ee48ee92.pth
+
+# path
+path:
+  pretrain_network_g: ~ # /share4/home/zqiang/BasicSR0906/experiments/ICMEVSRx4_FG_SPM_spynet_bkupMM522/models/net_g_125000.pth
+  strict_load_g: true
+  resume_state: ~
+
+# training settings
+train:
+  ema_decay: 0.999
+  optim_g:
+    type: Adam
+    lr: !!float 2e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: CosineAnnealingRestartLR
+    periods: [300000]
+    restart_weights: [1]
+    eta_min: !!float 1e-7
+
+  total_iter: 300000
+  warmup_iter: -1  # no warm up
+  fix_flow: 5000 # 5000 # 300001  # 0  #5000
+  flow_lr_mul: 0.125
+
+  # losses
+  pixel_opt:
+    type: CharbonnierandSPmaskLoss  # CharbonnierandSPmaskLoss  # CharbonnierLoss  #  Charbonnier_SPmask_GradientL1Loss   #  CharbonnierLoss
+    loss_weight: [1.0, 0.1]  #  [1.0, 0.1]   # [1.0, 0.1, 0.005]   # 1.0
+    reduction: mean
+
+# validation settings
+val:
+  val_freq: 1000 # 500  # !!float 5e3
+  save_img: false
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 8
+      test_y_channel: true # true
+    ssim: # metric name, can be arbitrary
+      type: calculate_ssim
+      crop_border: 8
+      test_y_channel: true
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 5e3
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
+
+find_unused_parameters: true
