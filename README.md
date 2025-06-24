@@ -44,6 +44,11 @@ Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)*
     ```bash
     python setup.py develop
     ```
+    or
+   
+   ```bash
+   pip install basicsr
+   ```
 
 ### Training
 comming soon
