@@ -1,8 +1,7 @@
 # CVSR:Complex-Valued Networks for Video Super-Resolution
 
-Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)*
+Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)
 
-(* : equal contribution)
 
 ## Abstract
   > In video super-resolution (VSR), bidirectional sequences (i.e., forward and backward sequences) inherently describe the temporal ﬂow and provide oriented motion information for high-resolution reconstruction. However, few works consider further modeling of bidirectional features, and they only aggregate these forward features and backward features into a group of ordinary feature maps via concatenation. Therefore, the correlation between the two features in opposite directions remains to be explored. In this paper, we provide a novel viewpoint for VSR, which constructs a higher relationship with respect to the forward features and backward features in the complex number domain. We respectively treat a forward feature and a backward feature as the real component and the imaginary component of a complex number and compute them according to the rules of complex number. This computation allows the bidirectional features to embrace a more coupling relation, so as to excavate high-dimension information used for reconstruction. Speciﬁcally to achieve complex VSR framework, we present two transplantable modules, i.e., complex transform and complex attention. The complex transform aims to generally change the bidirectional features to complex features by constructing a complex feature extraction. The complex attention can adaptively rectify the complex features for each complex feature map, so as to project a feature map to a speciﬁc frequency. In addition, we analyze the superiority of complex representations compared with real-valued representations. Extensive experiments on representative bidirectional networks (BasicVSR and IconVSR) and their improved form (IBRN) show the effectiveness and robustness of complex VSR framework.
@@ -51,10 +50,25 @@ Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)*
    ```
 
 ### Training
-comming soon
+```bash
+# train on vimeo-90k
+sh script/dist_train.sh options/train/CVSR/train_CIBRN_Vimeo90k_b6.yml
+
+# train on RealVSR
+sh script/dist_train.sh options/train/CVSR/train_CIBRN_REAL_YCbCr.yml
+```
 
 ### Test
-comming soon
+```bash
+# test on Vimeo90K-T
+sh script/dist_test.sh options/test/CVSR/test_CIBRN_Vimeo90k-T.yml
+
+# test on vid4
+sh script/dist_test.sh options/test/CVSR/test_CVSR_Vid4.yml
+
+# test on RealVSR
+sh script/dist_test.sh options/test/CVSR/test_CIBRN_REAL_YCbCr.yml
+```
 
 ### Pretrained Model
 [Pretrained Model](experiments/models)
