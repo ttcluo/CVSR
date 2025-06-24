@@ -15,17 +15,44 @@ Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)*
 <img src = "./framework.png" width="100%" height="100%"/>
 
 ## Usage
-### Data Preparation
-comming soon
+### Dataset Preparation
+
+- Please refer to **[DatasetPreparation.md](docs/DatasetPreparation.md)** for more details.
+- The descriptions of currently supported datasets (`torch.utils.data.Dataset` classes) are in [Datasets.md](docs/Datasets.md).
+
+### Dependencies and Installation
+
+- Python >= 3.8 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
+- [PyTorch >= 2.1](https://pytorch.org/)
+- NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
+
+1. Clone repository
+
+    ```bash
+    git clone https://github.com/ttcluo/CVSR.git
+    ```
+
+2. Install dependent packages
+
+    ```bash
+    cd CVSR
+    pip install -r requirements.txt
+    ```
+
+3. Compile basicsr environment
+
+    ```bash
+    python setup.py develop
+    ```
 
 ### Training
 comming soon
 
-### Evaluation
+### Test
 comming soon
 
 ### Pretrained Model
-Pretrained Model(https://github.com/ttcluo/CVSR/experiments/models)
+[Pretrained Model](https://github.com/ttcluo/CVSR/experiments/models)
 
 ## Acknowledgement
 
