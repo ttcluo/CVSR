@@ -8,8 +8,8 @@ Author : [Chuan Luo](https://orcid.org/0009-0000-7660-4239)
 
 ## News
 * [2025.06.24] Releases code
-* [2025.03.20] UNDER REVIEW at The Journal of Supercomputing
-* [2025.02.14] First submitted to The Journal of Supercomputing 
+* [2025.03.20] UNDER REVIEW
+* [2025.02.14] First submitted
 
 ## Framework of CVSR
 
