@@ -76,6 +76,22 @@ sh script/dist_test.sh options/test/CVSR/test_CIBRN_REAL_YCbCr.yml
 ### Pretrained Model
 [Pretrained Model](experiments/models)
 
+## Citation
+```
+@article{Luo2025,
+  title={CVSR: complex-valued networks for video super-resolution},
+  author={Luo, Chuan},
+  journal={The Journal of Supercomputing},
+  volume={81},
+  number={10},
+  pages={1159},
+  year={2025},
+  publisher={Springer},
+  doi={10.1007/s11227-025-07659-z},
+  url={https://doi.org/10.1007/s11227-025-07659-z},
+  issn={1573-0484}}
+```
+
 ## Acknowledgement
 
 Our code is built upon [BasicSR](https://github.com/XPixelGroup/BasicSR), which is an open-source image and video restoration toolbox based on [PyTorch](https://pytorch.org/). Thanks to the code reference from:
